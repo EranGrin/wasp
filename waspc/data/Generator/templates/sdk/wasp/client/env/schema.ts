@@ -10,13 +10,15 @@ const userClientEnvSchema = z.object({})
 {=/ envValidationSchema.isDefined =}
 
 const waspClientEnvSchema = z.object({
-  "{= serverUrlEnvVarName =}": z
-  .string()
-  .url({
-    message: '{= serverUrlEnvVarName =} must be a valid URL',
-  })
-  .default('{= defaultServerUrl =}'),
+  "{= serverUrlEnvVarName =}":
+    z.url({
+      error: '{= serverUrlEnvVarName =} must be a valid URL',
+    })
+    .default('{= defaultServerUrl =}'),
 })
 
 // PRIVATE API (sdk, Vite config)
-export const clientEnvSchema = userClientEnvSchema.merge(waspClientEnvSchema)
+export const clientEnvSchema = z.object({
+  ...userClientEnvSchema.shape,
+  ...waspClientEnvSchema.shape,
+})

@@ -64,14 +64,20 @@ export function getInferredBasenameFromServerToml(
   paths: TomlFilePaths,
 ): string {
   const serverFlyAppName = getAppNameFromToml(paths.serverTomlPath);
-  return serverFlyAppName.replace("-server", "");
+  // Only strip the trailing `-server` suffix so that app names which legitimately
+  // contain `-server` earlier in the name (e.g. `my-server-app-server`) are not
+  // mangled. Mirrors wasp-lang/wasp#3983.
+  return serverFlyAppName.replace(/-server$/, "");
 }
 
 export function getInferredBasenameFromClientToml(
   paths: TomlFilePaths,
 ): string {
   const clientFlyAppName = getAppNameFromToml(paths.clientTomlPath);
-  return clientFlyAppName.replace("-client", "");
+  // Only strip the trailing `-client` suffix so that app names which legitimately
+  // contain `-client` earlier in the name (e.g. `my-client-app-client`) are not
+  // mangled. Mirrors wasp-lang/wasp#3983.
+  return clientFlyAppName.replace(/-client$/, "");
 }
 
 export function replaceLineInLocalToml(
